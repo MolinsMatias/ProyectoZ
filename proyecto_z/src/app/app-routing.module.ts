@@ -68,6 +68,23 @@ const routes: Routes = [
     path: 'planetas/admin-planeta',
     loadChildren: () => import('./planetas/admin/admin-planeta/admin-planeta.module').then(m => m.AdminPlanetaPageModule)
   },
+  {
+    path: 'cruds/sexos/crear-sexo',
+    loadChildren: () => import('./cruds/sexos/crear-sexo/sexo.module').then( m => m.SexoPageModule)
+  },
+  {
+    path: 'cruds/sexos/listar-sexo',
+    loadChildren: () => import('./cruds/sexos/listar-sexo/listar-sexo.module').then( m => m.ListarSexoPageModule)
+  },
+  {
+    path: 'cruds/razas/crear-raza',
+    loadChildren: () => import('./cruds/razas/crear-raza/crear-raza.module').then( m => m.CrearRazaPageModule)
+  },
+  {
+    path: 'cruds/razas/listar-raza',
+    loadChildren: () => import('./cruds/razas/listar-raza/listar-raza.module').then( m => m.ListarRazaPageModule)
+  },
+
 
 
 
