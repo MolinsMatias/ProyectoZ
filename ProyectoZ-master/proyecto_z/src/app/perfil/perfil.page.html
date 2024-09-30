@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <link rel="stylesheet" href="perfil.page.scss">
+
+    <body style="display:flex; align-items:center; justify-content:center;">
+        <div class="login-page">
+            <div class="form">
+                <form class="login-form">
+                    <h2 style="font-size: 20px; color: aqua;">Perfil de {{ usuario.nombre }}</h2>
+                </form>
+                <div>
+                    <p class="message" style="color: #ffffff; font-size: 15px">Nombre</p>
+                    <a class="btn2" href="">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        {{ usuario.nombre }}
+                    </a>
+                </div>
+                <div>
+                    <p class="message" style="color: #ffffff; font-size: 15px">Apellido</p>
+                    <a class="btn2" href="">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        {{usuario.apellido}}
+                    </a>
+                </div>
+                <div>
+                    <p class="message" style="color: #ffffff; font-size: 15px; ">Raza</p>
+                    <a class="btn2">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        {{ usuario.raza }}
+                    </a>
+                </div>
+                <div>
+                    <p class="message" style="color: #ffffff; font-size: 15px; ">Email</p>
+                    <a class="btn2">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        {{ usuario.email }}
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <canvas id="rainfall"></canvas>
+    </body>
+</ion-content>
