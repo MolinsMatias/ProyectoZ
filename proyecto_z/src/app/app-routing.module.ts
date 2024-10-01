@@ -84,6 +84,15 @@ const routes: Routes = [
     path: 'cruds/razas/listar-raza',
     loadChildren: () => import('./cruds/razas/listar-raza/listar-raza.module').then( m => m.ListarRazaPageModule)
   },
+  {
+    path: 'cruds/facciones/crear-faccion',
+    loadChildren: () => import('./cruds/facciones/crear-faccion/crear-faccion.module').then( m => m.CrearFaccionPageModule)
+  },
+  {
+    path: 'cruds/facciones/listar-faccion',
+    loadChildren: () => import('./cruds/facciones/listar-faccion/listar-faccion.module').then( m => m.ListarFaccionPageModule)
+  },
+
 
 
 

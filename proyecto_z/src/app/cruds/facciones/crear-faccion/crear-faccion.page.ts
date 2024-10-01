@@ -1,45 +1,47 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
-import { RazaI } from 'src/app/common/models/raza.models';
+import { FaccionI } from 'src/app/common/models/facciones.models';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 
 @Component({
-  selector: 'app-crear-raza',
-  templateUrl: './crear-raza.page.html',
-  styleUrls: ['./crear-raza.page.scss'],
+  selector: 'app-crear-faccion',
+  templateUrl: './crear-faccion.page.html',
+  styleUrls: ['./crear-faccion.page.scss'],
 })
-export class CrearRazaPage implements OnInit {
+export class CrearFaccionPage implements OnInit {
 
+ 
 
-  razas: RazaI[] = [];
+  facciones: FaccionI[] = [];
 
-  newRaza: RazaI;
+  newFaccion: FaccionI;
   cargando: boolean = false;
 
   constructor(private firestoreService: FirestoreService,
      private loadingCtrl: LoadingController, private router: Router) {
-    this.loadRazas();
-    this.initRazas();
+    this.loadFacciones();
+    this.initFacciones();
   }
 
   ngOnInit() {
   }
 
-  loadRazas() {
-    this.firestoreService.getCollectionChanges<RazaI>('Razas').subscribe(cambios => {
+  loadFacciones() {
+    this.firestoreService.getCollectionChanges<FaccionI>('Facciones').subscribe(cambios => {
 
       if (cambios) {
-        this.razas = cambios;
+        this.facciones = cambios;
       }
 
     })
   }
 
-  initRazas() {
-    this.newRaza = {
+  initFacciones() {
+    this.newFaccion = {
       id: this.firestoreService.createIdDoc(),
       nombre: null,
+      lider: null,
     }
   }
 
@@ -48,7 +50,7 @@ export class CrearRazaPage implements OnInit {
     const loading = await this.showLoading();
     this.router.navigate(['/home']);
     try {
-      await this.firestoreService.createDocumentID(this.newRaza, "Razas", this.newRaza.id);
+      await this.firestoreService.createDocumentID(this.newFaccion, "Facciones", this.newFaccion.id);
     } catch (error) {
       console.error('Error al guardar:', error);
     } finally {
@@ -67,5 +69,3 @@ export class CrearRazaPage implements OnInit {
   }
 
 }
-
-
