@@ -59,6 +59,7 @@ export class AppComponent implements OnInit {
       { title: 'Planetas', url: '/planetas/lista-planetas', icon: 'planet' },
     ];
     if (this.userRole === 'admin') {
+      this.appPages.push({ title: 'Panel Administrador', url: '/admin/panel-admin', icon: 'cash'}),
       this.appPages.push({ title: 'Crear personaje', url: '/personajes/crear-personaje', icon: 'add' }),
       this.appPages.push({ title: 'Crear planeta', url: '/planetas/crear-planeta', icon: 'add' }),
       this.appPages.push({ title: 'Lista de usuario', url: '/usuarios-registrados', icon: 'folder' });

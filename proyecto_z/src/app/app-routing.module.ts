@@ -92,6 +92,11 @@ const routes: Routes = [
     path: 'cruds/facciones/listar-faccion',
     loadChildren: () => import('./cruds/facciones/listar-faccion/listar-faccion.module').then( m => m.ListarFaccionPageModule)
   },
+  {
+    path: 'admin/panel-admin',
+    loadChildren: () => import('./admin/panel-admin/panel-admin.module').then( m => m.PanelAdminPageModule)
+  },
+
 
 
 
