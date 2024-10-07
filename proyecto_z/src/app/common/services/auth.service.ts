@@ -17,7 +17,6 @@ export class AuthService {
   }
 
   // Registro de usuarios con email y contraseña
-  // Registro de usuarios con email y contraseña
   async register(usuario: UsuarioI) {
     try {
       const userCredential = await this.afAuth.createUserWithEmailAndPassword(usuario.email, usuario.password);
@@ -52,7 +51,7 @@ export class AuthService {
       console.log("Login exitoso");
     }).catch(error => {
       console.error('Error en login:', error);
-      throw error; // Propaga el error para que pueda ser manejado donde se llama
+      throw error;
     });
   }
 
@@ -65,12 +64,12 @@ export class AuthService {
       const userDoc = await this.firestore.collection('usuarios').doc(userId).get().toPromise();
       if (userDoc.exists) {
         const data = userDoc.data() as UsuarioI;
-        return data.role; // Asegúrate de que la propiedad se llama 'rol' y no 'role'
+        return data.role;
       }
       return null; // Si el documento no existe, devuelve null
     } catch (error) {
       console.error('Error al obtener el rol del usuario:', error);
-      return null; // En caso de error, devuelve null
+      return null; 
     }
   }
 

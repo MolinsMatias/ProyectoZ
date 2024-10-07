@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { LoadingController } from '@ionic/angular';
+import { FaccionI } from 'src/app/common/models/facciones.models';
 import { PersonajeI } from 'src/app/common/models/personajes.models';
+import { RazaI } from 'src/app/common/models/raza.models';
+import { SexoI } from 'src/app/common/models/sexo.models';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 
 @Component({
@@ -11,28 +14,78 @@ import { FirestoreService } from 'src/app/common/services/firestore.service';
 export class CrearPersonajePage implements OnInit {
 
   personajes: PersonajeI[] = [];
+  sexo: SexoI[] = [];
+  raza: RazaI[] = [];
+  faccion: FaccionI[] = [];
 
   newPersonaje: PersonajeI;
   cargando: boolean = false;
 
   constructor(private firestoreService: FirestoreService, private loadingCtrl: LoadingController) {
-    this.loadPersonajes();
     this.initPersonajes();
   }
 
   ngOnInit() {
+    this.loadPersonajes();
+    this.loadSexo();
+    this.loadRaza();
+    this.loadFaccion();
   }
 
   loadPersonajes() {
     this.firestoreService.getCollectionChanges<PersonajeI>('Personajes').subscribe(cambios => {
-
       if (cambios) {
         this.personajes = cambios;
       }
-
-    })
+    });
   }
 
+  loadSexo() {
+    this.firestoreService.getCollectionChanges<SexoI>('Sexos').subscribe({
+      next: (cambios) => { 
+        if (cambios) {
+          this.sexo = cambios;
+        } else {
+          console.warn('No se encontraron cambios en la colección sexo.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar sexo:', error);
+      }
+    });
+  }
+
+  loadRaza() {
+    this.firestoreService.getCollectionChanges<RazaI>('Razas').subscribe({
+      next: (cambios) => { 
+        if (cambios) {
+          this.raza = cambios;
+        } else {
+          console.warn('No se encontraron cambios en la colección raza.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar raza:', error);
+      }
+    });
+  }
+
+  loadFaccion() {
+    this.firestoreService.getCollectionChanges<FaccionI>('Facciones').subscribe({
+      next: (cambios) => { 
+        if (cambios) {
+          this.faccion = cambios;
+        } else {
+          console.warn('No se encontraron cambios en la colección raza.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar raza:', error);
+      }
+    });
+  }
+  
+  
   initPersonajes() {
     this.newPersonaje = {
       id: this.firestoreService.createIdDoc(),
@@ -44,7 +97,7 @@ export class CrearPersonajePage implements OnInit {
       descripcion: null,
       imagen: null,
       faccion: null,
-    }
+    };
   }
 
   async save() {
@@ -69,5 +122,4 @@ export class CrearPersonajePage implements OnInit {
     await loading.present();
     return loading;
   }
-  
 }

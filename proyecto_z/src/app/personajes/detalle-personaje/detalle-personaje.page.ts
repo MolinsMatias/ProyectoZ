@@ -54,22 +54,25 @@ export class DetallePersonajePage implements OnInit {
     }
   }
 
-  async save() {
+  async save(event: Event) {
+    const id = this.route.snapshot.paramMap.get('id');
     if (this.personaje) {
       this.cargando = true;
       const loading = await this.showLoading();
       try {
-        await this.firestoreService.updateDocumentID(this.personaje, "Personajes", this.personaje.id);
+        await this.firestoreService.updateDocumentID(this.personaje, "Personajes", id);
         this.isEditing = false; // Desactivar modo edición
       } catch (error) {
-        console.error('Error al guardar:', error);
+        console.error('Error al guardar:', error); // Captura errores
       } finally {
         this.cargando = false;
         loading.dismiss();
       }
+    } else {
+      console.warn('No hay personaje para guardar'); // Mensaje si no hay personaje
     }
   }
-
+  
   async showLoading() {
     const loading = await this.loadingCtrl.create({
       message: 'Cargando...',
@@ -81,7 +84,9 @@ export class DetallePersonajePage implements OnInit {
 
   toggleEdit() {
     this.isEditing = !this.isEditing; // Alternar modo edición
+    console.log('Modo edición:', this.isEditing);
   }
+  
 
   
 }
