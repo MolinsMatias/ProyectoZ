@@ -4,6 +4,9 @@ import { PersonajeI } from 'src/app/common/models/personajes.models';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { UserCredential } from 'firebase/auth'; // Línea correcta
+import { User } from 'firebase/auth'; // Asegúrate de tener esta importación
+
 
 @Component({
   selector: 'app-lista-personaje',

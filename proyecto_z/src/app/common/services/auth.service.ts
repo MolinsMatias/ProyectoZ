@@ -35,8 +35,16 @@ export class AuthService {
         role: 'usuario'
       });
 
-      console.log('Usuario registrado:', userCredential);
-      this.router.navigate(['home']);
+      // Enviar el correo de verificación
+      await userCredential.user?.sendEmailVerification();
+      console.log('Correo de verificación enviado.');
+
+      // Cerrar sesión después de registrar y enviar el correo de verificación
+      await this.afAuth.signOut();
+      console.log('Sesión cerrada. Verifica tu correo antes de iniciar sesión.');
+
+      // Redirigir al usuario a la página de inicio de sesión
+      this.router.navigate(['login']);
     } catch (error) {
       const firebaseError = error as FirebaseError;
       console.error('Error al registrar el usuario:', firebaseError);
@@ -45,15 +53,28 @@ export class AuthService {
   }
 
   // Inicio de sesión con email y contraseña
-  login(email: string, password: string): Promise<void> {
-    return this.afAuth.signInWithEmailAndPassword(email, password).then(() => {
-      // Login exitoso
+  async login(email: string, password: string): Promise<void> {
+    try {
+      // Intenta iniciar sesión con el correo y la contraseña
+      const userCredential = await this.afAuth.signInWithEmailAndPassword(email, password);
+
+      // Verifica que el usuario existe y si su correo ha sido verificado
+      const user = userCredential.user;
+      if (user && !user.emailVerified) {
+        await this.afAuth.signOut(); // Cierra la sesión si el correo no está verificado
+        throw new Error("Debes verificar tu correo antes de iniciar sesión."); // Lanza un error
+      }
+
       console.log("Login exitoso");
-    }).catch(error => {
+    } catch (error) {
       console.error('Error en login:', error);
-      throw error;
-    });
+      throw error; // Propaga el error hacia el componente
+    }
   }
+
+
+
+
 
   // Cierre de sesión
   logout(): Promise<void> {
@@ -69,7 +90,7 @@ export class AuthService {
       return null; // Si el documento no existe, devuelve null
     } catch (error) {
       console.error('Error al obtener el rol del usuario:', error);
-      return null; 
+      return null;
     }
   }
 

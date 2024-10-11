@@ -35,6 +35,7 @@ export class AppComponent implements OnInit {
 
         this.firestore.collection('usuarios').doc(user.uid).valueChanges().subscribe((usuarioData: any) => {
           if (usuarioData) {
+            this.usuario.nombre = usuarioData.nombre;
             this.usuario.apellido = usuarioData.apellido;
             this.usuario.raza = usuarioData.raza;
             this.usuario.role = usuarioData.role;
@@ -43,7 +44,6 @@ export class AppComponent implements OnInit {
             this.userRole = usuarioData.role; // Asegúrate de que el rol se obtenga correctamente
           }
           this.loadAppPages(); // Carga las páginas aquí, después de obtener el rol
-          console.log('Datos del usuario autenticado:', this.usuario);
         });
       } else {
         console.log('No hay usuario autenticado');

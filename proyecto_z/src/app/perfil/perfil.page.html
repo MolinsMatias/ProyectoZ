@@ -19,14 +19,12 @@
                         <ion-input type="text" [(ngModel)]="usuario.apellido" name="apellido" required></ion-input>
                     </div>
                     <div>
-                        <ion-select class="btn2" style="color: white;"  name="raza" [(ngModel)]="usuario.raza"
-                            label="Raza" label-placement="floating" fill="outline">
-                            <ion-select-option value="Saiyan">Saiyan</ion-select-option>
-                            <ion-select-option value="Namekian">Namekian</ion-select-option>
-                            <ion-select-option value="Majin">Majin</ion-select-option>
-                            <ion-select-option value="Angel">Ángel</ion-select-option>
-                            <ion-select-option value="Humano">Humano</ion-select-option>
+                        <ion-select [(ngModel)]="usuario.raza" name="raza" placeholder="Selecciona una opción"
+                            fill="solid">
+                            <ion-select-option *ngFor="let option of raza" [value]="option.nombre">{{ option.nombre
+                                }}</ion-select-option>
                         </ion-select>
+
                     </div>
                     <ion-button fill="clear" class="btn" type="submit">
                         Guardar
@@ -75,7 +73,7 @@
                             {{ usuario.email }}
                         </a>
                     </div>
-                    
+
                     <div>
                         <a class="btn2" (click)="isEditing = true">
                             <span></span>

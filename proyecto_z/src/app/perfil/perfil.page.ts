@@ -5,6 +5,7 @@ import { AuthService } from '../common/services/auth.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { FirestoreService } from '../common/services/firestore.service';
+import { RazaI } from '../common/models/raza.models';
 
 @Component({
   selector: 'app-perfil',
@@ -20,8 +21,9 @@ export class PerfilPage implements OnInit {
   private raindrops: { x: number, y: number, speed: number, length: number }[] = [];
   private maxRaindrops: number = 50;
   isEditing: boolean = false;
+  raza: RazaI[] = [];
 
-  usuario: { nombre: string; email: string ; apellido?: string; raza: string; role?: string; } = {
+  usuario: { nombre: string; email: string; apellido?: string; raza: string; role?: string; } = {
     nombre: 'Forastero',
     email: 'ejemplo@gmail.com',
     apellido: 'Mr Aragna',
@@ -34,8 +36,8 @@ export class PerfilPage implements OnInit {
     private firestore: AngularFirestore,
     private authService: AuthService,
     private router: Router,
-    private alertController: AlertController
-  ) {}
+    private alertController: AlertController,
+  ) { }
 
   async ngOnInit() {
     this.afAuth.authState.subscribe(user => {
@@ -60,6 +62,8 @@ export class PerfilPage implements OnInit {
         this.loadAppPages(); // Carga las páginas también cuando no hay usuario autenticado
       }
     });
+
+    this.loadRaza();
   }
 
   loadAppPages() {
@@ -69,12 +73,28 @@ export class PerfilPage implements OnInit {
     ];
     if (this.userRole === 'admin') {
       this.appPages.push({ title: 'Crear personaje', url: '/personajes/crear-personaje', icon: 'add' }),
-      this.appPages.push({ title: 'Crear planeta', url: '/planetas/crear-planeta', icon: 'add' }),
-      this.appPages.push({ title: 'Lista de usuario', url: '/usuarios-registrados', icon: 'folder' });
+        this.appPages.push({ title: 'Crear planeta', url: '/planetas/crear-planeta', icon: 'add' }),
+        this.appPages.push({ title: 'Lista de usuario', url: '/usuarios-registrados', icon: 'folder' });
     }
-    
+
 
   }
+
+  loadRaza() {
+    this.firestoreService.getCollectionChanges<RazaI>('Razas').subscribe({
+      next: (cambios) => {
+        if (cambios) {
+          this.raza = cambios;
+        } else {
+          console.warn('No se encontraron cambios en la colección raza.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar raza:', error);
+      }
+    });
+  }
+  
   async onSubmit() {
     try {
       const user = await this.afAuth.currentUser; // Obtener el usuario actual
@@ -85,10 +105,10 @@ export class PerfilPage implements OnInit {
           raza: this.usuario.raza,
           nombre: this.usuario.nombre,
         };
-  
+
         // Llamar a updateDocument para actualizar los datos en Firestore
         await this.firestoreService.updateDocument(updateData, `usuarios/${user.uid}`);
-      
+
         // Mostrar una alerta de éxito
         const alert = await this.alertController.create({
           header: 'Éxito',
@@ -107,7 +127,7 @@ export class PerfilPage implements OnInit {
       }
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
-    
+
       // Mostrar una alerta de error
       const errorAlert = await this.alertController.create({
         header: 'Error',
@@ -127,7 +147,7 @@ export class PerfilPage implements OnInit {
     try {
       // Cerrar sesión usando el servicio de autenticación
       await this.authService.logout();
-  
+
       // Mostrar la alerta de despedida
       const alert = await this.alertController.create({
         header: 'Hasta pronto',
@@ -140,17 +160,17 @@ export class PerfilPage implements OnInit {
           }
         }]
       });
-  
+
       // Presentar la alerta
       await alert.present();
-  
+
       // Redirigir al home (sin recargar aquí, se hará después de la alerta)
       await this.router.navigate(['/home']);
-      
+
       console.log('Usuario ha cerrado sesión');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
-  
+
       // Mostrar alerta en caso de error
       const errorAlert = await this.alertController.create({
         header: 'Error',

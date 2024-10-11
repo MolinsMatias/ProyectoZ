@@ -24,28 +24,24 @@ export class LoginPage implements OnInit {
   async login() {
     try {
       await this.authService.login(this.email, this.password);
-
       await this.router.navigate(['/home']);
-
       const alert = await this.alertController.create({
-        header: 'Bienvenido',
-        message: `Hola ${this.email}, bienvenido a la aplicación`,
+        header: '¡Logeado correctamente!',
+        message: `Bienvenido ${this.email}`,
         buttons: ['OK']
       });
       await alert.present();
-
-    } catch (error) {
-
+    } catch (error: any) {
       const errorAlert = await this.alertController.create({
         header: 'Error',
-        message: 'Los datos no coinciden. Inténtalo nuevamente.',
+        message: error.message || 'Los datos no coinciden. Inténtalo nuevamente.',
         buttons: ['OK']
       });
       await errorAlert.present();
-
-      console.error('Error en el login:', error);
     }
   }
+
+
 
   ngOnInit(): void {
     // Aquí no necesitas hacer nada por ahora

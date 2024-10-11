@@ -1,11 +1,12 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { FormControl, FormGroupDirective, FormBuilder, FormGroup, NgForm, Validators, AbstractControl } from '@angular/forms';
-
+import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { UsuarioI } from '../../common/models/usuario.models';
 import { LoadingController, AlertController } from '@ionic/angular';
 import { AuthService } from 'src/app/common/services/auth.service';
+import { RazaI } from 'src/app/common/models/raza.models';
 
 @Component({
   selector: 'app-register',
@@ -13,10 +14,11 @@ import { AuthService } from 'src/app/common/services/auth.service';
   styleUrls: ['../login/login.page.scss'],
 })
 export class RegisterPage implements OnInit {
-  
+
 
   usuarioForm!: FormGroup;
   usuario: UsuarioI; // Cambia a un solo objeto UsuarioI
+  raza: RazaI[] = [];
 
   private canvas!: HTMLCanvasElement;
   private ctx!: CanvasRenderingContext2D;
@@ -27,10 +29,12 @@ export class RegisterPage implements OnInit {
     , public loadingController: LoadingController,
     private router: Router,
     private authService: AuthService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private firestoreService: FirestoreService,
   ) { }
 
   ngOnInit() {
+    this.loadRaza();
     // Especificamos que todos los campos son obligatorios
     this.usuarioForm = this.formBuilder.group({
       'nombre': [null, [Validators.required, this.nom]],
@@ -40,6 +44,7 @@ export class RegisterPage implements OnInit {
       'raza': [null, Validators.required],
     });
     this.usuario = {} as UsuarioI; // Inicializa el objeto usuario
+
   }
 
   aragna(control: AbstractControl) {
@@ -76,22 +81,42 @@ export class RegisterPage implements OnInit {
   async onFormSubmit() {
     if (this.usuarioForm.valid) {
       const formValues = this.usuarioForm.value;
-  
+
       // Llama al método de registro y espera su resolución
       await this.authService.register(formValues);
-  
+
       // Muestra un mensaje de bienvenida
       const alert = await this.alertController.create({
-        header: 'Bienvenido',
-        message: `¡Hola, ${formValues.nombre}! Te has registrado con éxito.`,
+        header: '¡Registrado correctamente!',
+        message: `Revisa tu correo electrónico "${this.usuarioForm.value.email}" para verificar tu correo y completar el proceso de registro.`,
         buttons: ['OK']
       });
       await alert.present();
+
+      // Redirige al login después de mostrar la alerta
+      await alert.onDidDismiss(); // Espera a que se cierre la alerta
+      this.router.navigate(['login']); // Redirige a la página de login
     } else {
       // Manejar errores de validación si es necesario
       console.log('Formulario inválido', this.usuarioForm.errors);
     }
   }
+
+  loadRaza() {
+    this.firestoreService.getCollectionChanges<RazaI>('Razas').subscribe({
+      next: (cambios) => {
+        if (cambios) {
+          this.raza = cambios;
+        } else {
+          console.warn('No se encontraron cambios en la colección raza.');
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar raza:', error);
+      }
+    });
+  }
+
 
   ngAfterViewInit(): void {
     this.canvas = document.getElementById('rainfall') as HTMLCanvasElement;
