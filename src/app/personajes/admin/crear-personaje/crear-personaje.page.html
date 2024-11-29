@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Añadir Personaje</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-item>
+      <ion-label>Nombre</ion-label>
+      <ion-input [(ngModel)]="newPersonaje.nombre"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Ki</ion-label>
+      <ion-input [(ngModel)]="newPersonaje.ki"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Ki máximo</ion-label>
+      <ion-input [(ngModel)]="newPersonaje.maxKi"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-select label="Raza" class="btn" [(ngModel)]="newPersonaje.raza" placeholder="Selecciona una opción" fill="solid">
+        <ion-select-option *ngFor="let option of raza" [value]="option.nombre">{{ option.nombre }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-select label="Sexo" class="btn" [(ngModel)]="newPersonaje.sexo" placeholder="Selecciona una opción" fill="solid">
+        <ion-select-option *ngFor="let option of sexo" [value]="option.nombre">{{ option.nombre }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-select label="Facción" class="btn" [(ngModel)]="newPersonaje.faccion" placeholder="Selecciona una opción" fill="solid">
+        <ion-select-option *ngFor="let option of faccion" [value]="option.nombre">{{ option.nombre }}</ion-select-option>
+      </ion-select>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Descripción</ion-label>
+      <ion-input [(ngModel)]="newPersonaje.descripcion"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>Imagen (URL)</ion-label>
+      <ion-input type="text" [(ngModel)]="newPersonaje.imagen"></ion-input>
+    </ion-item>
+  </ion-card>
+
+  <div style="margin: 20px">
+    <ion-button (click)="save()" expand="block" shape="round">
+      Añadir personaje
+    </ion-button>
+  </div>
+</ion-content>

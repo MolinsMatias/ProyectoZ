@@ -1,0 +1,55 @@
+<app-date-range-picker [isOpen]="isDatePickerOpen" (closeModal)="closeDatePicker()"
+  (dateSelected)="onDateSelected($event)">
+</app-date-range-picker>
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Informes</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-toolbar><ion-title>Tipos de informes</ion-title></ion-toolbar>
+
+  <div>
+    <ion-card *ngFor="let p of tiposInformes; let i = index">
+      <ion-card-header>
+        <ion-card-title>{{ p.title }}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item *ngIf="p.title === 'Todos los Personajes'" lines="none">
+          <div style="display: flex; flex-direction: column; width: 100%;">
+            <ion-button expand="block" class="export" (click)="generatePdfBasico()"><ion-icon
+                name="{{ p.icon }}"></ion-icon>Generar Informe Básico</ion-button>
+            <ion-button expand="block" class="export" (click)="generatePdfFull()"><ion-icon
+                name="{{ p.icon }}"></ion-icon>Generar Informe Full</ion-button>
+          </div>
+        </ion-item>
+        <ion-item *ngIf="p.title !== 'Todos los Personajes'" (click)="openDatePicker()" lines="none">
+          <div style="display: flex; flex-direction: column; width: 100%;">
+            <!-- Sección del input con ícono y texto -->
+            <div style="display: flex; align-items: center;">
+              <ion-icon name="calendar-outline" style="margin-right: 8px;"></ion-icon>
+              <ion-input readonly
+                [value]="formattedDates.length === 2 ? formattedDates.join(' - ') : 'Selecciona un rango'">
+              </ion-input>
+            </div>
+            <!-- Botón para generar informe -->
+            <ion-button *ngIf="formattedDates.length === 2" expand="block" (click)="generateReportPorFecha($event)"
+              class="export" style="margin-top: 10px;">
+              <ion-icon name="{{ p.icon }}" style="margin-right: 8px;"></ion-icon> Generar informe
+            </ion-button>
+          </div>
+        </ion-item>
+
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+
+
+
+</ion-content>

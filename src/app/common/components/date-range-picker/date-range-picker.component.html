@@ -1,0 +1,28 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="closeDatePicker()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Selecciona un rango de fechas</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeDatePicker()">Cerrar</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-datetime
+        presentation="date"
+        [(ngModel)]="selectedDates"
+        (ionChange)="onDateRangeChange($event)"
+        multiple="true"
+        min="2023-01-01"
+        max="2024-12-31"
+        locale="es-ES">
+      </ion-datetime>
+    </ion-content>
+    <ion-footer>
+      <ion-toolbar>
+        <ion-button expand="block" (click)="closeDatePicker()">Guardar</ion-button>
+      </ion-toolbar>
+    </ion-footer>
+  </ng-template>
+</ion-modal>

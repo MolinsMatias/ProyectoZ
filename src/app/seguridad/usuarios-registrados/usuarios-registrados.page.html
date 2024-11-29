@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Lista de Usuarios</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label style="color: white;">Buscar por:</ion-label>
+    <ion-select show-clear-button="focus" animated="true" [placeholder]="getPlaceholder()" style="color: white;" [(ngModel)]="selectedSearchCriteria" (ionChange)="onCriteriaChange()">
+      <ion-select-option value="email">Correo</ion-select-option>
+      <ion-select-option value="nombre">Nombre</ion-select-option>
+      <ion-select-option value="rol">Rol</ion-select-option>
+      <ion-select-option value="raza">Raza</ion-select-option>
+    </ion-select>
+  </ion-item>
+  
+  <ion-searchbar
+    [(ngModel)]="searchTerm" (ionInput)="buscarUsuarios()" show-clear-button="focus" animated="true" [placeholder]="getPlaceholder()" style="color: white;">
+  </ion-searchbar>
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" size-md="6" size-lg="4" *ngFor="let usuario of usuarios">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title style="color: white;">{{ usuario.nombre }} {{ usuario.apellido }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content style="color: white;">
+            <p>Email: {{ usuario.email }}</p>
+            <p>Raza: {{ usuario.raza }}</p>
+            <p>Rol: {{ usuario.role }}</p>
+            <ion-row>
+              <ion-col>
+                <ion-button (click)="selectUsuarioForEdit(usuario)" expand="full">Editar</ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button (click)="eliminarUsuario(usuario.email)" expand="full">Eliminar Usuario</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- Formulario de Edición -->
+        <div *ngIf="isEditing && editingUsuario?.email === usuario.email">
+          <h2>Editar Usuario</h2>
+          <form (ngSubmit)="onSubmit()" #usuariosForm="ngForm">
+            <div>
+              <p style="color: white;">Nombre</p>
+              <ion-input type="text" [(ngModel)]="editingUsuario.nombre" name="nombre" required></ion-input>
+            </div>
+            <div>
+              <p style="color: white;">Apellido</p>
+              <ion-input type="text" [(ngModel)]="editingUsuario.apellido" name="apellido" required></ion-input>
+            </div>
+            <div>
+              <ion-select [(ngModel)]="editingUsuario.raza" name="raza" label="Raza" placeholder="Selecciona una raza"
+              fill="solid" style="color: white;">
+              <ion-select-option *ngFor="let option of usuarioService.raza" [value]="option.nombre">{{ option.nombre
+                  }}</ion-select-option>
+          </ion-select>
+            </div>
+            <div>
+              <ion-select class="btn2" name="role" [(ngModel)]="editingUsuario.role" label="Rol">
+                <ion-select-option value="usuario">usuario</ion-select-option>
+                <ion-select-option value="admin">admin</ion-select-option>
+              </ion-select>
+            </div>
+            <ion-button type="submit">Guardar</ion-button>
+            <ion-button (click)="isEditing = false">Cancelar</ion-button>
+          </form>
+        </div>
+
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

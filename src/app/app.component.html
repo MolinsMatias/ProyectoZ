@@ -1,0 +1,65 @@
+<ion-app>
+  <ion-menu menuId="main-menu" contentId="main">
+    <ion-content>
+      <div class="menu-header-bg"></div>
+      <div class="header-content">
+        <img [src]="usuarioService.usuario.imagen">
+        <ion-label>
+          <h2>{{ usuarioService.usuario.nombre }} {{usuarioService.usuario.apellido}}</h2> <!-- Mostrar el nombre del usuario autenticado -->
+          <p>{{ usuarioService.usuario.raza }}</p>
+          <p>{{ usuarioService.usuario.role }}</p>
+        </ion-label>
+      </div>
+
+      <ion-list class="menu-items" lines="none"*ngFor="let page of usuarioService.appPages">
+        <ion-item routerDirection="root" [routerLink]="[page.url]" lines="none" detail="false" routerLinkActive="selected">
+          <ion-icon [ios]="page.icon + '-outline'" [ios]="page.icon + '-sharp'"></ion-icon>
+          <ion-label>{{ page.title }}</ion-label>
+        </ion-item>
+      </ion-list>
+      
+      <div class="bottom-icons">
+        <div class="social-icons">
+          <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer">
+            <ion-icon name="logo-facebook" class="bottom-icon text-blue-600"></ion-icon>
+          </a>
+          <a href="https://discord.com" target="_blank" rel="noopener noreferrer">
+            <ion-icon name="logo-discord" class="bottom-icon text-purple-600"></ion-icon>
+          </a>
+          <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer">
+            <ion-icon name="logo-tiktok" class="bottom-icon text-gray"></ion-icon>
+          </a>
+        </div>
+        
+        <a (click)="logout()" style="cursor: pointer;">
+          <ion-icon name="log-out" class="bottom-icon"></ion-icon>
+        </a>
+      </div>
+      
+      
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="main"></ion-router-outlet>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button tab="home">
+        <ion-icon src="assets/icon/tab_icons/home.svg"></ion-icon>
+        Inicio
+      </ion-tab-button>
+      <ion-tab-button tab="personajes/lista-personaje">
+        <ion-icon src="assets/icon/tab_icons/personajes.svg"></ion-icon>
+        Personajes
+      </ion-tab-button>
+      <ion-tab-button tab="personajes/favorito">
+        <ion-icon name="bookmark"></ion-icon>
+        Favoritos
+      </ion-tab-button>
+      <ion-tab-button (click)="goToProfile()">
+        <ion-icon name="person-sharp"></ion-icon>
+        Perfil
+      </ion-tab-button>
+    </ion-tab-bar>
+
+  </ion-tabs>
+</ion-app>
