@@ -6,6 +6,12 @@ import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 
+import * as QRCode from 'qrcode';
+
+
+
+
+
 @Component({
   selector: 'app-detalle-personaje',
   templateUrl: './detalle-personaje.page.html',
@@ -17,17 +23,24 @@ export class DetallePersonajePage implements OnInit {
   userRole: string | null = null;
   isEditing: boolean = false;
 
+  codigoQR: string = '';
+  imageFlipped: boolean = false;
+  personajeId: string | null = null;
+
+
+
   constructor(
     private route: ActivatedRoute,
     private firestoreService: FirestoreService,
     private loadingCtrl: LoadingController,
     private authService: AuthService,
     private afAuth: AngularFireAuth,
-    private cd: ChangeDetectorRef
-  ) {}
+    private cd: ChangeDetectorRef,
+  ) { }
 
   ngOnInit() {
     this.loadUserRoleAndPersonaje();
+
   }
 
   private async loadUserRoleAndPersonaje() {
@@ -44,10 +57,12 @@ export class DetallePersonajePage implements OnInit {
 
   private async loadPersonaje() {
     const id = this.route.snapshot.paramMap.get('id');
+
     if (id) {
       this.firestoreService.getDocument<PersonajeI>(`Personajes/${id}`).then((doc) => {
         if (doc.exists()) {
           this.personaje = doc.data() as PersonajeI;
+          this.generarCodigoQR();
           this.cd.detectChanges(); // Forzar la detección de cambios
         }
       });
@@ -72,7 +87,7 @@ export class DetallePersonajePage implements OnInit {
       console.warn('No hay personaje para guardar'); // Mensaje si no hay personaje
     }
   }
-  
+
   async showLoading() {
     const loading = await this.loadingCtrl.create({
       message: 'Cargando...',
@@ -86,7 +101,24 @@ export class DetallePersonajePage implements OnInit {
     this.isEditing = !this.isEditing; // Alternar modo edición
     console.log('Modo edición:', this.isEditing);
   }
-  
 
-  
+
+  async generarCodigoQR() {//QR
+    this.personajeId = this.route.snapshot.paramMap.get('id');
+    if (this.personaje) {
+      try {
+        const url = `https://proyectoz-e0b23.web.app/personajes/detalle-personaje/${this.personajeId}`;
+        this.codigoQR = await QRCode.toDataURL(url);
+      } catch (error) {
+      }
+    }
+  }
+
+
+  toggleImage() {
+    this.imageFlipped = !this.imageFlipped;  // CambiaR el estado de la imagen al hacer clic
+    this.generarCodigoQR();  // RegeneraR el código QR cada vez que la imagen se gira
+  }
+
+
 }
