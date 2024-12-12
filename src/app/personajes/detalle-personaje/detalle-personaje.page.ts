@@ -107,8 +107,8 @@ export class DetallePersonajePage implements OnInit {
     this.personajeId = this.route.snapshot.paramMap.get('id');
     if (this.personaje) {
       try {
-        const url = `https://proyectoz-e0b23.web.app/personajes/detalle-personaje/${this.personajeId}`;
-        this.codigoQR = await QRCode.toDataURL(url);
+        const id = this.personajeId;
+        this.codigoQR = await QRCode.toDataURL(id);
       } catch (error) {
       }
     }

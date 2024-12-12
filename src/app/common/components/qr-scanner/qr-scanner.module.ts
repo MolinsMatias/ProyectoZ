@@ -2,19 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { ListaPersonajePageRoutingModule } from './lista-personaje-routing.module';
-import { ListaPersonajePage } from './lista-personaje.page';
-
-
+import { QrScannerComponent } from './qr-scanner.component';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    ListaPersonajePageRoutingModule,
-
+    ZXingScannerModule
   ],
-  declarations: [ListaPersonajePage]
+  declarations: [QrScannerComponent],
+  exports: [QrScannerComponent]
 })
-export class ListaPersonajePageModule {}
+export class QrScannerModule {}

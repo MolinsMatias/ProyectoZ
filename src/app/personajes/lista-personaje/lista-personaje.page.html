@@ -4,6 +4,11 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="openQrScanner()">
+        <ion-icon name="qr-code-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar>
     <ion-searchbar show-clear-button="focus" animated="true" placeholder="Buscar personaje"
@@ -18,6 +23,7 @@
     </ion-select>
   </ion-toolbar>
 </ion-header>
+
 
 <ion-content [fullscreen]="true">
   <ion-grid>
@@ -50,11 +56,12 @@
             <!-- Botones para Editar y Confirmar -->
             <ion-buttons>
               <!-- Mostrar el botón de editar solo si el usuario es admin -->
-              <ion-button *ngIf="userRole === 'admin'" (click)="personaje.isEditing ? confirmarEdicion(personaje) : edit(personaje)">
+              <ion-button *ngIf="userRole === 'admin'"
+                (click)="personaje.isEditing ? confirmarEdicion(personaje) : edit(personaje)">
                 <ion-icon *ngIf="!personaje.isEditing" name="pencil-outline"></ion-icon>
                 <ion-icon *ngIf="personaje.isEditing" name="checkmark-outline"></ion-icon>
               </ion-button>
-              <ion-button  *ngIf="isAuthenticated" fill="clear" (click)="agregarAFavoritos(personaje)">
+              <ion-button *ngIf="isAuthenticated" fill="clear" (click)="agregarAFavoritos(personaje)">
                 <ion-icon name="heart"></ion-icon>
               </ion-button>
               <br>
@@ -69,19 +76,4 @@
     </ion-row>
   </ion-grid>
 
-  <!-- <ion-footer>
-    <ion-toolbar class="footer-toolbar">
-      <ion-buttons slot="end" class="pagination-buttons">
-        <ion-button (click)="goToPage(firstLink)" [disabled]="!previousLink"><ion-icon
-            name="chevron-back-outline"></ion-icon><ion-icon name="chevron-back-outline"></ion-icon></ion-button>
-        <ion-button (click)="goToPage(previousLink)" [disabled]="!previousLink"><ion-icon
-            name="chevron-back-outline"></ion-icon></ion-button>
-        <ion-button>{{currentPage}}</ion-button>
-        <ion-button (click)="goToPage(nextLink)" [disabled]="!nextLink"><ion-icon
-            name="chevron-forward-outline"></ion-icon></ion-button>
-        <ion-button (click)="goToPage(lastLink)" [disabled]="!nextLink"><ion-icon
-            name="chevron-forward-outline"></ion-icon><ion-icon name="chevron-forward-outline"></ion-icon></ion-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-footer> -->
 </ion-content>

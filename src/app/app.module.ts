@@ -15,6 +15,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { getDatabase, provideDatabase } from '@angular/fire/database';
 import { getStorage, provideStorage } from '@angular/fire/storage';
 import { environment } from 'src/environments/environment';
+import { QrScannerModule } from './common/components/qr-scanner/qr-scanner.module';
 
 
 
@@ -33,6 +34,8 @@ import { environment } from 'src/environments/environment';
       rippleEffect: false,
       mode: 'ios'
     }) ,
+    QrScannerModule
+    
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, 
     provideFirebaseApp(() => initializeApp(environment.firebase)),

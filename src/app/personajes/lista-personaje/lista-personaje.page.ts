@@ -1,11 +1,13 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { PersonajeI } from 'src/app/common/models/personajes.models';
 import { FirestoreService } from 'src/app/common/services/firestore.service';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { UserCredential } from 'firebase/auth'; // Línea correcta
 import { User } from 'firebase/auth'; // Asegúrate de tener esta importación
+import { Router } from '@angular/router';
+import { QrScannerComponent } from 'src/app/common/components/qr-scanner/qr-scanner.component';
 
 @Component({
   selector: 'app-lista-personaje',
@@ -19,13 +21,15 @@ export class ListaPersonajePage implements OnInit {
   cargando: boolean = false;
   userRole: string | null = null;
   isAuthenticated: boolean = false;
+  isScannerVisible = false;
 
   constructor(
     private firestoreService: FirestoreService,
     private loadingCtrl: LoadingController,
     private authService: AuthService,
     private afAuth: AngularFireAuth,
-    private cd: ChangeDetectorRef 
+    private cd: ChangeDetectorRef,
+    private modalController: ModalController
   ) {}
 
   ngOnInit() {
@@ -156,4 +160,14 @@ async agregarAFavoritos(personaje: PersonajeI) {
   trackByFn(index: number, personaje: PersonajeI): any {
     return personaje.id;
   }
+
+
+  async openQrScanner() {
+    const modal = await this.modalController.create({
+      component: QrScannerComponent,
+      cssClass: 'transparent-modal'
+    });
+    return await modal.present();
+  }
+
 }

@@ -1,0 +1,7 @@
+<div class="scanner-container">
+  <h1>Escanea el QR para buscar el personaje</h1>
+  <ion-button class="close-button" (click)="dismiss()">
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-button>
+  <zxing-scanner (scanSuccess)="handleQrCodeResult($event)"></zxing-scanner>
+</div>

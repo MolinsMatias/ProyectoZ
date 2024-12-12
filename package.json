@@ -32,6 +32,7 @@
     "@ionic-native/file-opener": "^5.36.0",
     "@ionic/angular": "^8.0.0",
     "@ngneat/tailwind": "^7.0.3",
+    "@zxing/ngx-scanner": "^19.0.0",
     "angularx-qrcode": "^18.0.2",
     "firebase": "^10.13.1",
     "firebase-admin": "^12.4.0",
