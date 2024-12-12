@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 import { AuthService } from 'src/app/common/services/auth.service';
 import { PdfGeneratorService } from 'src/app/common/services/pdf-generator.service';
 
@@ -96,4 +97,6 @@ export class InformesPage implements OnInit {
   generatePdfFull(){
     this.pdfService.generatePdfPorVariasSecciones()
   }
+
+
 }

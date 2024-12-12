@@ -4,6 +4,8 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { PersonajeI } from '../models/personajes.models'; // Asegúrate de que el modelo esté correctamente importado
 import { Timestamp } from 'firebase/firestore';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { ToastController } from '@ionic/angular';
 
 // Asegúrate de agregar las fuentes virtuales de pdfMake
 (<any>pdfMake).addVirtualFileSystem(pdfFonts);
@@ -12,7 +14,7 @@ import { Timestamp } from 'firebase/firestore';
   providedIn: 'root',
 })
 export class PdfGeneratorService {
-  constructor(private firestore: AngularFirestore) { }
+  constructor(private firestore: AngularFirestore, private toastController: ToastController) { }
 
   // Método para generar el PDF con fecha
   generatePdfFecha(startDate: string, endDate: string) {
@@ -51,7 +53,7 @@ export class PdfGeneratorService {
           { text: `Generado el: ${currentDateTime}`, style: 'subheader' },
           { text: `Desde: ${start.toLocaleDateString('es-ES')} Hasta: ${end.toLocaleDateString('es-ES')}`, style: 'subheader' },
           { text: '\n' }, // Salto de línea
-          
+
           {
             style: 'content',
             table: {
@@ -95,7 +97,7 @@ export class PdfGeneratorService {
             fillColor: '#f2f2f2',
             margin: [0, 5]
           },
-          content:{
+          content: {
             fontSize: 12,
             italics: false,
             alignment: 'center',
@@ -105,7 +107,19 @@ export class PdfGeneratorService {
       };
 
       // Crear el PDF y abrirlo para descarga
-      pdfMake.createPdf(docDefinition).download('informe_personajes_rango.pdf');
+      pdfMake.createPdf(docDefinition).getBase64(async (base64) => {
+        try {
+          const result = await Filesystem.writeFile({
+            path: 'informe_por_fechas.pdf',
+            data: base64,
+            directory: Directory.Documents,
+            // No uses Encoding.UTF8 aquí
+          });
+          this.showToast(`Informe desde ${start} hasta ${end} guardado con exito!`);
+        } catch (e) {
+          this.showToast('Error al guardar el archivo');
+        }
+      })
     });
   }
 
@@ -132,7 +146,7 @@ export class PdfGeneratorService {
       // Crear el contenido para el PDF
       const currentDateTime = new Date().toLocaleString('es-ES');
       const docDefinition: any = {
-        
+
         content: [
           { text: 'Informe de personajes básico de "ProyectoZ"', style: 'header' },
           { text: `Generado el: ${currentDateTime}`, style: 'subheader' },
@@ -160,7 +174,7 @@ export class PdfGeneratorService {
             fillColor: '#f2f2f2',
             margin: [0, 5]
           },
-          content:{
+          content: {
             fontSize: 12,
             italics: false,
             alignment: 'center',
@@ -170,7 +184,19 @@ export class PdfGeneratorService {
       };
 
       // Crear el PDF y abrirlo para descarga
-      pdfMake.createPdf(docDefinition).download('informe_personajes_basico.pdf');
+      pdfMake.createPdf(docDefinition).getBase64(async (base64) => {
+        try {
+          const result = await Filesystem.writeFile({
+            path: 'informe_basico.pdf',
+            data: base64,
+            directory: Directory.Documents,
+            // No uses Encoding.UTF8 aquí
+          });
+          this.showToast("Informe basico guardado en documentos");
+        } catch (e) {
+          this.showToast('Error al guardar el archivo');
+        }
+      })
     });
   }
 
@@ -261,7 +287,7 @@ export class PdfGeneratorService {
             fillColor: '#c2c2c2',
             margin: [0, 5]
           },
-          content:{
+          content: {
             fontSize: 12,
             italics: false,
             alignment: 'center',
@@ -271,7 +297,19 @@ export class PdfGeneratorService {
       };
 
       // Crear el PDF y abrirlo para descarga
-      pdfMake.createPdf(docDefinition).download('informe_personajes_full.pdf');
+      pdfMake.createPdf(docDefinition).getBase64(async (base64) => {
+        try {
+          const result = await Filesystem.writeFile({
+            path: 'informe_full.pdf',
+            data: base64,
+            directory: Directory.Documents,
+            // No uses Encoding.UTF8 aquí
+          });
+          this.showToast("Informe full guardado en documentos");
+        } catch (e) {
+          this.showToast('Error al guardar el archivo');
+        }
+      })
     });
   }
 
@@ -342,8 +380,8 @@ export class PdfGeneratorService {
     const razas = Array.from(new Set(personajes.map(p => p.raza)));
     return razas.map(raza => {
       const personajesRaza = personajes
-      .filter(p => p.raza === raza)
-      .sort((a,b) => a.nombre.localeCompare(b.nombre))
+        .filter(p => p.raza === raza)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre))
       return {
         text: raza,
         style: 'content',
@@ -375,8 +413,8 @@ export class PdfGeneratorService {
     const facciones = Array.from(new Set(personajes.map(p => p.faccion)));
     return facciones.map(faccion => {
       const personajesFaccion = personajes
-      .filter(p => p.faccion === faccion)
-      .sort((a,b) => a.nombre.localeCompare(b.nombre))
+        .filter(p => p.faccion === faccion)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre))
       return {
         text: faccion,
         style: 'content',
@@ -408,8 +446,8 @@ export class PdfGeneratorService {
     const sexos = Array.from(new Set(personajes.map(p => p.sexo)));
     return sexos.map(sexo => {
       const personajesSexo = personajes
-      .filter(p => p.sexo === sexo)
-      .sort((a,b) => a.nombre.localeCompare(b.nombre))
+        .filter(p => p.sexo === sexo)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre))
       return {
         text: sexo,
         style: 'content',
@@ -437,6 +475,13 @@ export class PdfGeneratorService {
   }
 
 
-
+  async showToast(message: string) {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
 
 }
